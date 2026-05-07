@@ -416,7 +416,7 @@ window.ticketQueries = {};
 // ✅ SINGLE, FIXED LOAD FUNCTION
 async function loadTickets(){
   try {
-    const res = await fetch("http://127.0.0.1:8000/tickets");
+    const res = await fetch("https://csc-project.onrender.com/tickets");
     const data = await res.json();
 
     if (!data || data.length === 0) {
@@ -469,7 +469,7 @@ async function loadTickets(){
 // ✅ FIXED MARK DONE FUNCTION TO UPDATE FASTAPI DB
 async function markDone(ticketId) {
   try {
-    await fetch(`http://127.0.0.1:8000/tickets/${ticketId}`, { method: "PUT" });
+    await fetch(`https://csc-project.onrender.com/tickets/${ticketId}`, { method: "PUT" });
     loadTickets(); // Reload the table automatically
   } catch(err) {
     alert("Failed to update ticket.");
@@ -480,7 +480,7 @@ async function markDone(ticketId) {
 async function deleteTicket(ticketId) {
   if (!confirm("Are you sure you want to delete this query?")) return;
   try {
-    await fetch(`http://127.0.0.1:8000/tickets/${ticketId}`, { method: "DELETE" });
+    await fetch(`https://csc-project.onrender.com/tickets/${ticketId}`, { method: "DELETE" });
     loadTickets(); // Reload the table automatically
   } catch(err) {
     alert("Failed to delete ticket.");
