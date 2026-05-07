@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CSC Support Assistant</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0f172a;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* ================= BACKGROUND VIDEO ================= */
+
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.35;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.6));
+            z-index: -1;
+        }
+
+        /* ================= SCROLL ANIMATIONS ================= */
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #9333ea);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+        }
+
+        .hero h1 {
+            font-size: 55px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        .start-btn {
+            margin-top: 35px;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        /* ================= FORM ================= */
+
+        .form-section {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px;
+            min-height: 100vh;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        select option {
+            background: #0f172a;
+            color: white;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 650px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            outline: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border: 1px solid #6366f1;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.03);
+        }
+
+
+        .msg {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:768px) {
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <video autoplay loop muted playsinline class="bg-video">
+        <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-network-connection-background-28493-large.mp4"
+            type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="logo hidden">CSC</div>
+
+        <h1 class="hidden" style="transition-delay: 100ms;">CSC Support Assistant</h1>
+
+        <p class="hidden" style="transition-delay: 200ms;">
+            We provide AI-powered customer support solutions that generate
+            intelligent responses, manage customer tickets, and deliver
+            instant professional email support with modern automation.
+        </p>
+
+        <button class="start-btn hidden" style="transition-delay: 300ms;" onclick="openForm()">
+            Get Customer Support
+        </button>
+
+    </section>
+
+    <!-- FORM -->
+    <section class="form-section" id="formSection">
+
+        <div class="card">
+
+            <h2>Customer Query Form</h2>
+
+            <div class="input-group">
+                <input type="text" id="name" placeholder="Full Name" required>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="product" placeholder="Product Number" required>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="phone" placeholder="Phone Number" required>
+            </div>
+
+            <div class="input-group">
+                <select id="userType" required>
+                    <option value="">Select User Type</option>
+                    <option value="student">Student</option>
+                    <option value="professional">Professional</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select id="queryType" required>
+                    <option value="">Select Query Type</option>
+                    <option value="delay">Delay</option>
+                    <option value="refund">Refund</option>
+                    <option value="login">Login Issue</option>
+                    <option value="payment">Payment</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <textarea id="message" placeholder="Describe your issue..." required></textarea>
+            </div>
+
+            <button class="submit-btn" onclick="generate()">
+                Generate AI Reply
+            </button>
+
+
+        </div>
+    </section>
+
+    <script>
+
+        function openForm() {
+            const formSec = document.getElementById("formSection");
+            formSec.style.display = "flex";
+            setTimeout(() => {
+                formSec.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+        }
+
+        // SCROLL ANIMATIONS
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.hidden').forEach((el) => observer.observe(el));
+        });
+
+        function showMessage(msg, color) {
+            let old = document.querySelector(".msg");
+            if (old) old.remove();
+
+            let box = document.createElement("div");
+            box.className = "msg";
+            box.innerText = msg;
+            box.style.background = color;
+
+            document.querySelector(".card").appendChild(box);
+
+            setTimeout(() => {
+                box.remove();
+            }, 4000);
+        }
+
+        async function generate() {
+
+            const name = document.getElementById("name").value.trim();
+            const product = document.getElementById("product").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const userType = document.getElementById("userType").value;
+            const queryType = document.getElementById("queryType").value;
+            const message = document.getElementById("message").value.trim();
+
+            // VALIDATION
+            if (!name || !product || !email || !phone || !userType || !queryType || !message) {
+                showMessage("⚠ Please fill all fields", "#dc2626");
+                return;
+            }
+
+            const btn = document.querySelector(".submit-btn");
+
+            btn.innerText = "Generating...";
+            btn.disabled = true;
+
+            showMessage("⏳ AI is generating your response...", "#2563eb");
+
+            const data = {
+                name,
+                product,
+                email,
+                phone,
+                user_type: userType,
+                query_type: queryType,
+                message
+            };
+
+            try {
+
+                const res = await fetch("http://127.0.0.1:8000/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+
+                showMessage("✅ Response generated. Please check your email.", "#16a34a");
+
+            } catch (err) {
+
+                console.error(err);
+
+                showMessage("❌ Server Error", "#dc2626");
+
+            } finally {
+
+                btn.innerText = "Generate AI Reply";
+                btn.disabled = false;
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
