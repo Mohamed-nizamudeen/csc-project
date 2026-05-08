@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSC Project — CSC Support Service</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: #0f172a;
+  padding: 0 5%;
+}
+
+.login-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  z-index: 10;
+  gap: 50px;
+}
+
+.welcome-text {
+  flex: 1;
+  color: white;
+  animation: slideRight 1s ease forwards;
+}
+
+.welcome-text h1 {
+  font-size: 55px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+}
+
+.welcome-text p {
+  font-size: 20px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  max-width: 450px;
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media(max-width: 900px) {
+  .login-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+  .welcome-text h1 {
+    font-size: 40px;
+  }
+  .welcome-text p {
+    margin: 0 auto;
+  }
+}
+
+/* Background Video */
+.bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 0.4;
+}
+
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(15,23,42,0.5));
+  z-index: -1;
+}
+
+.card {
+  position: relative;
+  width: 380px;
+  padding: 40px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.2), inset 0 0 15px rgba(255,255,255,0.05);
+  color: white;
+  animation: fadeInGlow 1.2s ease forwards;
+}
+
+@keyframes fadeInGlow {
+  from {opacity: 0; transform: translateY(40px); box-shadow: 0 0 0px rgba(59, 130, 246, 0);}
+  to {opacity: 1; transform: translateY(0); box-shadow: 0 0 40px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(255,255,255,0.05);}
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Toggle */
+.toggle {
+  display: flex;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50px;
+  margin-bottom: 25px;
+}
+
+.toggle button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: 0.3s;
+}
+
+.toggle .active {
+  background: #3b82f6;
+}
+
+/* Floating input */
+.inputBox {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.inputBox input {
+  width: 100%;
+  padding: 12px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  color: white;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.inputBox input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  background: rgba(0,0,0,0.4);
+}
+
+.inputBox label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #aaa;
+  transition: 0.3s;
+}
+
+.inputBox input:focus + label,
+.inputBox input:valid + label {
+  top: -8px;
+  left: 10px;
+  font-size: 12px;
+  color: #3b82f6;
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #3b82f6;
+}
+
+form {
+  animation: slideUp 0.4s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+</style>
+</head>
+
+<body>
+
+<video autoplay loop muted playsinline class="bg-video">
+  <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-network-connection-background-28493-large.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay"></div>
+
+<div class="login-container">
+
+  <div class="welcome-text">
+    <h1>CSC Support Service</h1>
+    <p>An efficient email responsive website to rapidly rectify your problem.</p>
+  </div>
+
+  <div class="card">
+
+  <div class="toggle">
+    <button id="signInBtn" class="active">Sign In</button>
+    <button id="signUpBtn">Sign Up</button>
+  </div>
+
+  <!-- LOGIN -->
+  <form id="loginForm">
+    <h2>Welcome Back</h2>
+
+    <div class="inputBox">
+      <input type="text" id="username" required>
+      <label>Username</label>
+    </div>
+
+    <div class="inputBox">
+      <input type="password" id="password" required>
+      <label>Password</label>
+    </div>
+
+    <button class="btn">Login</button>
+  </form>
+
+  <!-- SIGNUP -->
+  <form id="signupForm" style="display:none;">
+    <h2>Create Account</h2>
+
+    <div class="inputBox">
+      <input type="text" required>
+      <label>User name</label>
+    </div>
+
+    <div class="inputBox">
+      <input type="text" required>
+      <label>Name</label>
+    </div>
+
+    <div class="inputBox">
+      <input type="email" required>
+      <label>Email</label>
+    </div>
+    <div class="inputBox">
+      <input type="password" required>
+      <label>Password</label>
+    </div>
+
+    <button class="btn">Create Account</button>
+  </form>
+
+  </div>
+</div>
+<script>
+
+  // ==============================
+  // 🔔 MESSAGE UI (NO ALERT)
+  // ==============================
+  function showMessage(msg, type="error"){
+    const old = document.querySelector(".msg");
+    if(old) old.remove();
+  
+    let box = document.createElement("div");
+    box.className = "msg";
+    box.innerText = msg;
+  
+    box.style.marginTop = "10px";
+    box.style.padding = "10px";
+    box.style.borderRadius = "8px";
+    box.style.fontSize = "14px";
+    box.style.textAlign = "center";
+  
+    if(type === "success"){
+      box.style.background = "#16a34a";
+    } else {
+      box.style.background = "#dc2626";
+    }
+  
+    document.querySelector(".card").appendChild(box);
+  
+    setTimeout(() => box.remove(), 3000);
+  }
+  
+  // ==============================
+  // 🔄 TOGGLE LOGIN / SIGNUP
+  // ==============================
+  const signInBtn = document.getElementById("signInBtn");
+  const signUpBtn = document.getElementById("signUpBtn");
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  
+  signInBtn.onclick = () => {
+    loginForm.style.display = "block";
+    signupForm.style.display = "none";
+    signInBtn.classList.add("active");
+    signUpBtn.classList.remove("active");
+  };
+  
+  signUpBtn.onclick = () => {
+    loginForm.style.display = "none";
+    signupForm.style.display = "block";
+    signUpBtn.classList.add("active");
+    signInBtn.classList.remove("active");
+  };
+  
+  // ==============================
+  // 📦 LOCAL STORAGE FUNCTIONS
+  // ==============================
+  function getUsers() {
+    return JSON.parse(localStorage.getItem("users")) || [];
+  }
+  
+  function saveUsers(users) {
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+  
+  // ==============================
+  // 🔐 VALIDATION FUNCTIONS
+  // ==============================
+  function isValidEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+  
+  function isValidUsername(username){
+    return /^[a-zA-Z0-9_]{3,15}$/.test(username);
+  }
+  
+  function isValidPassword(password){
+    return password.length >= 6;
+  }
+  
+  // ==============================
+  // 📝 SIGNUP LOGIC
+  // ==============================
+  signupForm.addEventListener("submit", function(e){
+    e.preventDefault();
+  
+    const inputs = signupForm.querySelectorAll("input");
+  
+    const username = inputs[0].value.trim();
+    const lastname = inputs[1].value.trim();
+    const email = inputs[2].value.trim();
+    const password = inputs[3].value.trim();
+  
+    // 🚨 VALIDATIONS
+    if(!username || !lastname || !email || !password){
+      showMessage("All fields are required!");
+      return;
+    }
+  
+    if(!isValidUsername(username)){
+      showMessage("Username must be 3-15 characters (letters, numbers, _)");
+      return;
+    }
+  
+    if(!isValidEmail(email)){
+      showMessage("Invalid email format!");
+      return;
+    }
+  
+    if(!isValidPassword(password)){
+      showMessage("Password must be at least 6 characters!");
+      return;
+    }
+  
+    let users = getUsers();
+  
+    // ❗ Duplicate username check
+    const exists = users.find(u => u.username === username);
+  
+    if(exists){
+      showMessage("Username already exists!");
+      return;
+    }
+  
+    // ✅ Save user
+    users.push({ username, lastname, email, password });
+    saveUsers(users);
+  
+    showMessage("Account created successfully!", "success");
+  
+    signupForm.reset();
+    signInBtn.click();
+  });
+  
+  // ==============================
+  // 🔑 LOGIN LOGIC
+  // ==============================
+  loginForm.addEventListener("submit", function(e){
+    e.preventDefault();
+  
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+  
+    if(!username || !password){
+      showMessage("Enter username and password!");
+      return;
+    }
+  
+    // 👑 ADMIN LOGIN
+    if(username === "csc_project" && password === "csc123@"){
+      showMessage("Admin login successful!", "success");
+      setTimeout(() => {
+        window.location.href = "admin.html";
+      }, 1000);
+      return;
+    }
+  
+    let users = getUsers();
+  
+    const validUser = users.find(u =>
+      u.username === username && u.password === password
+    );
+  
+    if(validUser){
+      localStorage.setItem("currentUser", username);
+  
+      showMessage("Login successful!", "success");
+  
+      setTimeout(() => {
+        window.location.href = "customer.html";
+      }, 1000);
+    } else {
+      showMessage("Invalid Username or Password!");
+    }
+  });
+  
+  </script>
+
+</body>
+</html>
